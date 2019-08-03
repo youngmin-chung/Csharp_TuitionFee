@@ -407,7 +407,7 @@ namespace TuitionFees
             int index7 = 0;
             while (nodeR2017.MoveNext())
             {
-                codeR2017[index7] = nodeR2017.Current.Value;
+                codeR2017[index7] = nodeR2017.Current.Value; 
                 ++index7;
             }
 
