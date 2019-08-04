@@ -299,15 +299,15 @@ namespace TuitionFees
                 }
                 else if (min == "0")
                 {
-                    sub_title = "Tuitions At or Below $" + max + " in " + year;
+                    sub_title = "Tuitions At or Below $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
                 }
                 else if (max == "")
                 {
-                    sub_title = "Tuitions At or Above $" + min + " in " + year;
+                    sub_title = "Tuitions At or Above $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " in " + year;
                 }
                 else
                 {
-                    sub_title = "Tuitions Between $" + min + " and $" + max + " in " + year;
+                    sub_title = "Tuitions Between $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " and $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
                 }
 
                 Console.WriteLine("\n" + sub_title);
