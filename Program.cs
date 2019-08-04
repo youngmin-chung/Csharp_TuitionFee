@@ -35,12 +35,12 @@ namespace TuitionFees
                 // Create an XPathNavigator object for performing XPath queries
                 XPathNavigator nav = doc.CreateNavigator();
 
-                Console.WriteLine(TITLE);
-                Console.WriteLine(new String('-', TITLE.Length));
-
                 string userInput = "";
                 do
                 {
+                    Console.WriteLine(TITLE);
+                    Console.WriteLine(new String('=', TITLE.Length));
+
                     // Get the user to input the name of a specific country
                     Console.Write("\nEnter 'R' to select a region, 'F' to select a field-of-study or 'T' to select a $ range: ");
                     userInput = Console.ReadLine();
@@ -89,7 +89,7 @@ namespace TuitionFees
 
         private static void displayRegions(XPathNavigator nav)
         {
-            Console.WriteLine("\nSelect a region by number as shown below...");
+            Console.WriteLine("\nSelect a region by number as shown below...\n");
             // get region description 
             XPathNodeIterator nodeR_Code = nav.Select("//region/@code");
             XPathNodeIterator nodeR_Description = nav.Select("//region/@description");
@@ -119,7 +119,7 @@ namespace TuitionFees
 
         private static void displayFields(XPathNavigator nav)
         {
-            Console.WriteLine("\nSelect a field by number as shown below...");
+            Console.WriteLine("\nSelect a field by number as shown below...\n");
             XPathNodeIterator nodeF_code = nav.Select("//field/@code");
             XPathNodeIterator nodeF_Description = nav.Select("//field/@description");
 
@@ -189,150 +189,133 @@ namespace TuitionFees
                     Console.WriteLine("ERROR: You must key-in a numeric, maximum price of at least {0:C}.\n", minPrice);
                 }
 
-            } while (!validInput);                                          
-            
-            Console.Write("\nEnter a year (2016 or 2017): ");
-            string year = Console.ReadLine();
-            if (Convert.ToInt32(year) == 2016 || Convert.ToInt32(year) == 2017)
+            } while (!validInput);
+
+            validInput = false;
+            do
             {
-                //
-                XPathNodeIterator nodeR_Code = nav.Select("//region/@code");
-                XPathNodeIterator nodeR_Description = nav.Select("//region/@description");
+                Console.Write("\nEnter a year (2016 or 2017): ");
+                string year = Console.ReadLine();
 
-                string[] codeR_Code = new string[nodeR_Code.Count];
-                string[] codeR_Description = new string[nodeR_Description.Count];
+                if (year == "2016" || year == "2017")
+                {
+                    validInput = true;
+                    XPathNodeIterator nodeT_Region;
+                    XPathNodeIterator nodeT_Field;
+                    XPathNodeIterator nodeT_Year;
 
-                int index1 = 0;
-                while (nodeR_Code.MoveNext())
-                {
-                    codeR_Code[index1] = nodeR_Code.Current.Value;
-                    ++index1;
-                }
-                int index2 = 0;
-                while (nodeR_Description.MoveNext())
-                {
-                    codeR_Description[index2] = nodeR_Description.Current.Value;
-                    ++index2;
-                }
-
-                XPathNodeIterator nodeF_code = nav.Select("//field/@code");
-                XPathNodeIterator nodeF_Description = nav.Select("//field/@description");
-
-                string[] codeF_Code = new string[nodeF_code.Count];
-                string[] codeF_Description = new string[nodeF_Description.Count];
-
-                int index3 = 0;
-                while (nodeF_code.MoveNext())
-                {
-                    codeF_Code[index3] = nodeF_code.Current.Value;
-                    ++index3;
-                }
-
-                int index4 = 0;
-                while (nodeF_Description.MoveNext())
-                {
-                    codeF_Description[index4] = nodeF_Description.Current.Value;
-                    ++index4;
-                }
-
-                XPathNodeIterator nodeT_Region;
-                XPathNodeIterator nodeT_Field;
-                XPathNodeIterator nodeT_Year;
-
-
-                string sub_title = "";
-                int count = 0;
-                if (min == "" && max == "")
-                {
-                    nodeT_Region = nav.Select("//tuition[@year =  " + year + "]/../@region-code");
-                    nodeT_Field = nav.Select("//tuition[@year = " + year + "]/../@field-code");
-                    nodeT_Year = nav.Select("//tuition[@year = " + year + "]/../tuition[contains(@year, " + year + ")]");
-                }
-
-                else if (min == "")
-                {
-                    min = "0";
-                    nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@region-code");
-                    nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@field-code");
-                    nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
-                }
-                else if (max == "")
-                {
-                    nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/@region-code");
-                    nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/@field-code");
-                    nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
-                }
-                else
-                {
-                    nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@region-code");
-                    nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@field-code");
-                    nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
-                }
-
-                string[] codeT_Region = new string[nodeT_Region.Count];
-                string[] codeT_Field = new string[nodeT_Field.Count];
-                string[] codeT_Year = new string[nodeT_Year.Count];
-
-
-                int index5 = 0;
-                while (nodeT_Region.MoveNext())
-                {
-                    codeT_Region[index5] = nodeT_Region.Current.Value;
-                    ++index5;
-                }
-                int index6 = 0;
-                while (nodeT_Field.MoveNext())
-                {
-                    codeT_Field[index6] = nodeT_Field.Current.Value;
-                    ++index6;
-                }
-                int index7 = 0;
-                while (nodeT_Year.MoveNext())
-                {
-                    codeT_Year[index7] = nodeT_Year.Current.Value;
-                    ++index7;
-                }
-
-                if (min == "" && max == "")
-                {
-                    sub_title = "All Tuitions for " + year;
-                }
-                else if (min == "0")
-                {
-                    sub_title = "Tuitions At or Below $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
-                }
-                else if (max == "")
-                {
-                    sub_title = "Tuitions At or Above $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " in " + year;
-                }
-                else
-                {
-                    sub_title = "Tuitions Between $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " and $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
-                }
-
-                Console.WriteLine("\n" + sub_title);
-                Console.WriteLine(new String('-', sub_title.Length));
-                Console.WriteLine("\n" + String.Format("{0, 23} {1, 45} {2, 10}", "Region", "Field-of-Study", "Tuition $") + "\n");
-                for (int i = 0; i < codeT_Region.Length; ++i)
-                {
-                    int region = Convert.ToInt32(codeT_Region[i]);
-                    int field = Convert.ToInt32(codeT_Field[i]);
-                    var isNumeric = int.TryParse(codeT_Year[i], out int n);
-                    if (isNumeric)
+                    string sub_title = "";
+                    int count = 0;
+                    if (min == "" && max == "")
                     {
-                        Console.WriteLine(String.Format("{0, 23} {1, 45} {2, 10:N0}", (codeR_Description[region - 1].Length >= 23 ? codeR_Description[region - 1].Substring(0, 23) : codeR_Description[region - 1]),
-                            (codeF_Description[field - 1].Length >= 44 ? codeF_Description[field - 1].Substring(0, 44) : codeF_Description[field - 1]), Convert.ToInt32(codeT_Year[i])));
+                        nodeT_Region = nav.Select("//tuition[@year =  " + year + "]/../@region-code");
+                        nodeT_Field = nav.Select("//tuition[@year = " + year + "]/../@field-code");
+                        nodeT_Year = nav.Select("//tuition[@year = " + year + "]/../tuition[contains(@year, " + year + ")]");
+                    }
+
+                    else if (min == "")
+                    {
+                        min = "0";
+                        nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@region-code");
+                        nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@field-code");
+                        nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
+                    }
+                    else if (max == "")
+                    {
+                        nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/@region-code");
+                        nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/@field-code");
+                        nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
                     }
                     else
-                        Console.WriteLine(String.Format("{0, 23} {1, 45} {2, 10:N0}", (codeR_Description[region - 1].Length >= 23 ? codeR_Description[region - 1].Substring(0, 23) : codeR_Description[region - 1]),
-                            (codeF_Description[field - 1].Length >= 44 ? codeF_Description[field - 1].Substring(0, 44) : codeF_Description[field - 1]), codeT_Year[i]));
-                    count++;
+                    {
+                        nodeT_Region = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@region-code");
+                        nodeT_Field = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/@field-code");
+                        nodeT_Year = nav.Select("//series[tuition[@year = " + year + "] < " + max + "and tuition[@year = " + year + "] > " + min + "]/tuition[contains(@year, " + year + ")]");
+                    }
 
+                    string[] codeT_Region = new string[nodeT_Region.Count];
+                    string[] codeT_Field = new string[nodeT_Field.Count];
+                    string[] codeT_Year = new string[nodeT_Year.Count];
+
+
+                    int index5 = 0;
+                    while (nodeT_Region.MoveNext())
+                    {
+                        codeT_Region[index5] = nodeT_Region.Current.Value;
+                        ++index5;
+                    }
+                    int index6 = 0;
+                    while (nodeT_Field.MoveNext())
+                    {
+                        codeT_Field[index6] = nodeT_Field.Current.Value;
+                        ++index6;
+                    }
+                    int index7 = 0;
+                    while (nodeT_Year.MoveNext())
+                    {
+                        codeT_Year[index7] = nodeT_Year.Current.Value;
+                        ++index7;
+                    }
+
+                    if (min == "" && max == "")
+                    {
+                        sub_title = "All Tuitions for " + year;
+                    }
+                    else if (min == "0")
+                    {
+                        sub_title = "Tuitions At or Below $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
+                    }
+                    else if (max == "")
+                    {
+                        sub_title = "Tuitions At or Above $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " in " + year;
+                    }
+                    else
+                    {
+                        sub_title = "Tuitions Between $" + string.Format("{0:N0}", Convert.ToDecimal(min)) + " and $" + string.Format("{0:N0}", Convert.ToDecimal(max)) + " in " + year;
+                    }
+
+                    Console.WriteLine("\n" + sub_title);
+                    Console.WriteLine(new String('-', sub_title.Length));
+                    Console.WriteLine("\n" + String.Format("{0, 23} {1, 45} {2, 10}", "Region", "Field-of-Study", "Tuition $") + "\n");
+                    for (int i = 0; i < codeT_Region.Length; ++i)
+                    {
+                        XPathNodeIterator nodeR_Description = nav.Select("//region[@code=" + codeT_Region[i] + "]/@description");
+                        string[] codeR_Description = new string[nodeR_Description.Count];
+                        int index1 = 0;
+                        while (nodeR_Description.MoveNext())
+                        {
+                            codeR_Description[index1] = nodeR_Description.Current.Value;
+                            ++index1;
+                        }
+
+                        XPathNodeIterator nodeF_Description = nav.Select("//field[@code=" + codeT_Field[i] + "]/@description");
+                        string[] codeF_Description = new string[nodeF_Description.Count];
+                        int index2 = 0;
+                        while (nodeF_Description.MoveNext())
+                        {
+                            codeF_Description[index2] = nodeF_Description.Current.Value;
+                            ++index2;
+                        }
+
+                        var isNumeric = int.TryParse(codeT_Year[i], out int n);
+                        if (isNumeric)
+                        {
+                            Console.WriteLine(String.Format("{0, 23} {1, 45} {2, 10:N0}", (nodeR_Description.Current.Value.Length >= 23 ? nodeR_Description.Current.Value.Substring(0, 23) : nodeR_Description.Current.Value),
+                                (nodeF_Description.Current.Value.Length >= 44 ? nodeF_Description.Current.Value.Substring(0, 44) : nodeF_Description.Current.Value), Convert.ToInt32(codeT_Year[i])));
+                        }
+                        else
+                            Console.WriteLine(String.Format("{0, 23} {1, 45} {2, 10:N0}", (nodeR_Description.Current.Value.Length >= 23 ? nodeR_Description.Current.Value.Substring(0, 23) : nodeR_Description.Current.Value),
+                                (nodeF_Description.Current.Value.Length >= 44 ? nodeF_Description.Current.Value.Substring(0, 44) : nodeF_Description.Current.Value), codeT_Year[i]));
+                        count++;
+
+                    }
+                    Console.WriteLine("\n" + count + " matches found.\n");
                 }
-                Console.WriteLine("\n" + count + " matches found.");
-            }
-            else
-                Console.WriteLine("\nERROR: Input the year 2016 or 2017");
+                else
+                {
+                    Console.WriteLine("\nERROR: Input the year 2016 or 2017");
+                }
+            } while (!validInput);
         }
 
         private static void displayTuitionField(string userInput, string value)
@@ -463,7 +446,7 @@ namespace TuitionFees
                         Console.WriteLine(String.Format("{0, 65} {1, 20:N0} {2, 20:N0}", codeF_Description[index - 1], codeR2016[i], codeR2017[i]));
                     count++;
                 }
-                Console.WriteLine("\n" + count + " matches found.");
+                Console.WriteLine("\n" + count + " matches found.\n");
             }
 
             else if (userInput == "F")
@@ -491,7 +474,7 @@ namespace TuitionFees
                         Console.WriteLine(String.Format("{0, 50} {1, 20:N0} {2, 20:N0}", codeR_Description[index - 1], codeF2016[i], codeF2017[i]));
                     count++;
                 }
-                Console.WriteLine("\n" + count + " matches found.");
+                Console.WriteLine("\n" + count + " matches found.\n");
             }
         }
     }
